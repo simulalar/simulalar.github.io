@@ -495,8 +495,25 @@ function attachFormatter(id) {
 }
 
 function blurCur() {
-  // no-op shim — kept for compatibility with share/load code
-  updateEntradaInfo();
+  // no-op shim — kept for share/load compatibility
+}
+
+function updateEntradaInfo() {
+  var valor   = getNumericValue('fValor')   || 0;
+  var entrada = getNumericValue('fEntrada') || 0;
+  var pv = valor - entrada;
+  var el = document.getElementById('entradaInfo');
+  if (!el) return;
+  if (valor > 0 && entrada > 0) {
+    var pct = (entrada / valor * 100).toFixed(1);
+    if (pv <= 0) {
+      el.innerHTML = '<span style="color:#f87171">⚠️ Entrada maior que o imóvel</span>';
+    } else {
+      el.innerHTML = 'Financiado: <b style="color:#4ade80">' + R(pv) + '</b> &nbsp;·&nbsp; Entrada: ' + pct + '% do imóvel';
+    }
+  } else {
+    el.innerHTML = '';
+  }
 }
 
 // ─── TAXA DATA ────────────────────────────────────────────────────
@@ -658,14 +675,14 @@ function pApos(rows,n) { return rows[n]?rows[n].parc:rows[rows.length-1].parc; }
 document.getElementById('btnSim').onclick = function() {
   blurCur(); // commit any active input
 
-  var valor    = parseInt(document.getElementById('fValor').value,10)    || 580000;
-  var entrada  = parseInt(document.getElementById('fEntrada').value,10)  || 116000;
-  var prazo    = parseInt(document.getElementById('fPrazo').value,10)    || 360;
-  var orc      = parseInt(document.getElementById('fOrc').value,10)      || 7000;
-  var nExtra   = parseInt(document.getElementById('fExtra').value,10)    || 24;
+  var valor    = getNumericValue('fValor')    || 580000;
+  var entrada  = getNumericValue('fEntrada')  || 116000;
+  var prazo    = getNumericValue('fPrazo')    || 360;
+  var orc      = getNumericValue('fOrc')      || 7000;
+  var nExtra   = getNumericValue('fExtra')    || 24;
   var usePort  = document.getElementById('chkPort').checked;
-  var portMes  = usePort ? (parseInt(document.getElementById('fPortMes').value,10)||12) : 0;
-  var portCusto= usePort ? (parseInt(document.getElementById('fPortCusto').value,10)||0) : 0;
+  var portMes  = usePort ? (getNumericValue('fPortMes')  || 12) : 0;
+  var portCusto= usePort ? (getNumericValue('fPortCusto') || 0) : 0;
   var portCont = usePort && document.getElementById('fPortCont').value==='1';
   var taxaO    = getTaxaVal(selOrig, 'fOrigCustom');
   var taxaP    = usePort ? getTaxaVal(selPort, 'fPortCustom') : taxaO;
@@ -930,6 +947,8 @@ carregarDeURL();
 </script>
 
     </div><!-- /.page -->
+
+
     <div class="ad-side right">
       <div class="ad-side-label">Publicidade</div>
       <ins class="adsbygoogle"
@@ -940,6 +959,7 @@ carregarDeURL();
     </div>
 
   </div><!-- /.mid-row -->
+
 
   <div class="ad-bar bottom">
     <div class="ad-bar-label">Publicidade</div>
