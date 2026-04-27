@@ -285,6 +285,31 @@ td:first-child { text-align: left; color: #94a3b8; font-family: Arial, sans-seri
   svg text { fill: #333 !important; }
   svg line { stroke: #ccc !important; }
 }
+     .caret {
+  display: inline-block;
+  width: 1px;
+  height: 16px;
+  background: #e2e8f0;
+  margin-left: 2px;
+  vertical-align: middle;
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  0%, 50%, 100% { opacity: 1; }
+  25%, 75% { opacity: 0; }
+}
+
+/* hidden by default */
+.cur-wrap .caret {
+  display: none;
+}
+
+/* show only when editing */
+.cur-wrap.editing .caret {
+  display: inline-block;
+}
+
 </style>
 </head>
 <body>
@@ -329,11 +354,11 @@ td:first-child { text-align: left; color: #94a3b8; font-family: Arial, sans-seri
 <div class="box">
   <div class="box-title">Parâmetros do Financiamento</div>
   <div class="g5">
-    <div class="field"><label>Valor do Imóvel (R$)</label><div class="cur-wrap" id="wValor"><div class="cur-display" id="dValor" onclick="focusCur('wValor')"><span class="cur-prefix">R$</span><span id="sValor">580.000</span></div></div><input type="hidden" id="fValor" value="580000"></div>
-    <div class="field"><label>Valor da Entrada (R$)</label><div class="cur-wrap" id="wEntrada"><div class="cur-display" id="dEntrada" onclick="focusCur('wEntrada')"><span class="cur-prefix">R$</span><span id="sEntrada">116.000</span></div></div><input type="hidden" id="fEntrada" value="116000"></div>
-    <div class="field"><label>Prazo (meses)</label><div class="cur-wrap" id="wPrazo"><div class="cur-display" id="dPrazo" onclick="focusCur('wPrazo')"><span class="cur-prefix"></span><span id="sPrazo">360</span></div></div><input type="hidden" id="fPrazo" value="360"></div>
-    <div class="field"><label>Orçamento mensal (R$)</label><div class="cur-wrap" id="wOrc"><div class="cur-display" id="dOrc" onclick="focusCur('wOrc')"><span class="cur-prefix">R$</span><span id="sOrc">7.000</span></div></div><input type="hidden" id="fOrc" value="7000"></div>
-    <div class="field"><label>Meses amortizando</label><div class="cur-wrap" id="wExtra"><div class="cur-display" id="dExtra" onclick="focusCur('wExtra')"><span class="cur-prefix"></span><span id="sExtra">24</span></div></div><input type="hidden" id="fExtra" value="24"></div>
+    <div class="field"><label>Valor do Imóvel (R$)</label><div class="cur-wrap" id="wValor"><div class="cur-display" id="dValor" onclick="focusCur('wValor')"><span class="cur-prefix">R$</span><span id="sValor">580.000</span>  <span class="caret"></span></div></div><input type="hidden" id="fValor" value="580000"></div>
+    <div class="field"><label>Valor da Entrada (R$)</label><div class="cur-wrap" id="wEntrada"><div class="cur-display" id="dEntrada" onclick="focusCur('wEntrada')"><span class="cur-prefix">R$</span><span id="sEntrada">116.000</span>  <span class="caret"></span></div></div><input type="hidden" id="fEntrada" value="116000"></div>
+    <div class="field"><label>Prazo (meses)</label><div class="cur-wrap" id="wPrazo"><div class="cur-display" id="dPrazo" onclick="focusCur('wPrazo')"><span class="cur-prefix"></span><span id="sPrazo">360</span>  <span class="caret"></span></div></div><input type="hidden" id="fPrazo" value="360"></div>
+    <div class="field"><label>Orçamento mensal (R$)</label><div class="cur-wrap" id="wOrc"><div class="cur-display" id="dOrc" onclick="focusCur('wOrc')"><span class="cur-prefix">R$</span><span id="sOrc">7.000</span>  <span class="caret"></span></div></div><input type="hidden" id="fOrc" value="7000"></div>
+    <div class="field"><label>Meses amortizando</label><div class="cur-wrap" id="wExtra"><div class="cur-display" id="dExtra" onclick="focusCur('wExtra')"><span class="cur-prefix"></span><span id="sExtra">24</span>  <span class="caret"></span></div></div><input type="hidden" id="fExtra" value="24"></div>
   </div>
   <div id="entradaInfo" style="margin-top:8px;font-size:11px;color:#64748b"></div>
 </div>
@@ -359,8 +384,8 @@ td:first-child { text-align: left; color: #94a3b8; font-family: Arial, sans-seri
   </div>
   <div id="portArea">
     <div class="g3" style="margin-bottom:14px">
-      <div class="field"><label>Mês da portabilidade</label><div class="cur-wrap" id="wPortMes"><div class="cur-display" id="dPortMes" onclick="focusCur('wPortMes')"><span class="cur-prefix"></span><span id="sPortMes">12</span></div></div><input type="hidden" id="fPortMes" value="12"></div>
-      <div class="field"><label>Custo portabilidade (R$)</label><div class="cur-wrap" id="wPortCusto"><div class="cur-display" id="dPortCusto" onclick="focusCur('wPortCusto')"><span class="cur-prefix">R$</span><span id="sPortCusto">3.000</span></div></div><input type="hidden" id="fPortCusto" value="3000"></div>
+      <div class="field"><label>Mês da portabilidade</label><div class="cur-wrap" id="wPortMes"><div class="cur-display" id="dPortMes" onclick="focusCur('wPortMes')"><span class="cur-prefix"></span><span id="sPortMes">12</span>  <span class="caret"></span></div></div><input type="hidden" id="fPortMes" value="12"></div>
+      <div class="field"><label>Custo portabilidade (R$)</label><div class="cur-wrap" id="wPortCusto"><div class="cur-display" id="dPortCusto" onclick="focusCur('wPortCusto')"><span class="cur-prefix">R$</span><span id="sPortCusto">3.000</span>  <span class="caret"></span></div></div><input type="hidden" id="fPortCusto" value="3000"></div>
       <div class="field"><label>Continua amortizando?</label>
         <select id="fPortCont">
           <option value="1">Sim — mantém R$7k/mês</option>
