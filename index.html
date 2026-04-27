@@ -32,6 +32,11 @@
 {"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Simulador de Financiamento Imobiliário","url":"https://seusite.com.br/","description":"Simulador gratuito de financiamento imobiliário com SAC, PRICE, amortização extra, portabilidade e compartilhamento por URL.","applicationCategory":"FinanceApplication","operatingSystem":"Web","inLanguage":"pt-BR","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"BRL"},"featureList":["Tabela SAC natural e recalculada","Tabela PRICE com redução de prazo ou parcela","Portabilidade de crédito","Amortização extra com reinvestimento automático","Análise de realismo das taxas (Selic 2026)","URL compartilhável","Download em PDF","Taxa personalizada"]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Qual a diferença entre SAC e PRICE?","acceptedAnswer":{"@type":"Answer","text":"No SAC a amortização é fixa e a parcela cai com o tempo. No PRICE a parcela é fixa, mas o total de juros é maior."}},{"@type":"Question","name":"Vale a pena fazer portabilidade de crédito imobiliário?","acceptedAnswer":{"@type":"Answer","text":"Sim, quando a diferença de taxa compensa o custo da portabilidade (~R$3.000). Use o simulador para calcular a economia líquida."}},{"@type":"Question","name":"O que é amortização extra?","acceptedAnswer":{"@type":"Answer","text":"É pagar acima da parcela para abater o saldo devedor, reduzindo prazo, parcelas futuras ou ambos."}}]}]}
 </script>
 
+<!-- ═══════════════════════════════════════════
+     GOOGLE ADSENSE
+     1. Substitua ca-pub-6217036542616408 pelo seu Publisher ID
+     2. Em cada bloco <ins> abaixo, coloque o data-ad-slot correto
+     ═══════════════════════════════════════════ -->
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6217036542616408"
      crossorigin="anonymous"></script>
 
@@ -204,19 +209,16 @@ td:first-child { text-align: left; color: #94a3b8; font-family: Arial, sans-seri
 .custom-input-wrap input { background: transparent; border: none; outline: none; color: #f59e0b; font-size: 15px; font-family: monospace; font-weight: bold; width: 80px; }
 .custom-input-wrap span { font-size: 12px; color: #64748b; }
 
-/* CURRENCY INPUT — formatted display */
-.cur-wrap { position: relative; }
-.cur-display {
+/* REAL INPUT FIELDS */
+.field input[type="text"], .field input[type="number"] {
   width: 100%; background: #141720; border: 1px solid #2d3448; border-radius: 8px;
   color: #e2e8f0; font-size: 14px; padding: 9px 12px; font-family: monospace;
-  cursor: text; min-height: 38px; line-height: 20px;
+  outline: none; transition: border-color .15s; caret-color: #4ade80;
 }
-.cur-display:focus-within { border-color: #4ade80; }
-.cur-display input {
-  position: absolute; opacity: 0; width: 1px; height: 1px; pointer-events: none;
+.field input[type="text"]:focus, .field input[type="number"]:focus {
+  border-color: #4ade80;
+  box-shadow: 0 0 0 3px rgba(74,222,128,.1);
 }
-.cur-wrap.editing .cur-display { border-color: #4ade80; }
-.cur-prefix { color: #64748b; margin-right: 3px; font-size: 13px; }
 
 /* ── ACTION BUTTONS (PDF + Share) ────────── */
 .action-bar {
@@ -285,31 +287,6 @@ td:first-child { text-align: left; color: #94a3b8; font-family: Arial, sans-seri
   svg text { fill: #333 !important; }
   svg line { stroke: #ccc !important; }
 }
-     .caret {
-  display: inline-block;
-  width: 1px;
-  height: 16px;
-  background: #e2e8f0;
-  margin-left: 2px;
-  vertical-align: middle;
-  animation: blink 1s infinite;
-}
-
-@keyframes blink {
-  0%, 50%, 100% { opacity: 1; }
-  25%, 75% { opacity: 0; }
-}
-
-/* hidden by default */
-.cur-wrap .caret {
-  display: none;
-}
-
-/* show only when editing */
-.cur-wrap.editing .caret {
-  display: inline-block;
-}
-
 </style>
 </head>
 <body>
@@ -354,11 +331,11 @@ td:first-child { text-align: left; color: #94a3b8; font-family: Arial, sans-seri
 <div class="box">
   <div class="box-title">Parâmetros do Financiamento</div>
   <div class="g5">
-    <div class="field"><label>Valor do Imóvel (R$)</label><div class="cur-wrap" id="wValor"><div class="cur-display" id="dValor" onclick="focusCur('wValor')"><span class="cur-prefix">R$</span><span id="sValor">580.000</span>  <span class="caret"></span></div></div><input type="hidden" id="fValor" value="580000"></div>
-    <div class="field"><label>Valor da Entrada (R$)</label><div class="cur-wrap" id="wEntrada"><div class="cur-display" id="dEntrada" onclick="focusCur('wEntrada')"><span class="cur-prefix">R$</span><span id="sEntrada">116.000</span>  <span class="caret"></span></div></div><input type="hidden" id="fEntrada" value="116000"></div>
-    <div class="field"><label>Prazo (meses)</label><div class="cur-wrap" id="wPrazo"><div class="cur-display" id="dPrazo" onclick="focusCur('wPrazo')"><span class="cur-prefix"></span><span id="sPrazo">360</span>  <span class="caret"></span></div></div><input type="hidden" id="fPrazo" value="360"></div>
-    <div class="field"><label>Orçamento mensal (R$)</label><div class="cur-wrap" id="wOrc"><div class="cur-display" id="dOrc" onclick="focusCur('wOrc')"><span class="cur-prefix">R$</span><span id="sOrc">7.000</span>  <span class="caret"></span></div></div><input type="hidden" id="fOrc" value="7000"></div>
-    <div class="field"><label>Meses amortizando</label><div class="cur-wrap" id="wExtra"><div class="cur-display" id="dExtra" onclick="focusCur('wExtra')"><span class="cur-prefix"></span><span id="sExtra">24</span>  <span class="caret"></span></div></div><input type="hidden" id="fExtra" value="24"></div>
+    <div class="field"><label>Valor do Imóvel (R$)</label><input type="text" id="fValor" value="580.000" inputmode="numeric" autocomplete="off"></div>
+    <div class="field"><label>Valor da Entrada (R$)</label><input type="text" id="fEntrada" value="116.000" inputmode="numeric" autocomplete="off"></div>
+    <div class="field"><label>Prazo (meses)</label><input type="text" id="fPrazo" value="360" inputmode="numeric" autocomplete="off"></div>
+    <div class="field"><label>Orçamento mensal (R$)</label><input type="text" id="fOrc" value="7.000" inputmode="numeric" autocomplete="off"></div>
+    <div class="field"><label>Meses amortizando</label><input type="text" id="fExtra" value="24" inputmode="numeric" autocomplete="off"></div>
   </div>
   <div id="entradaInfo" style="margin-top:8px;font-size:11px;color:#64748b"></div>
 </div>
@@ -384,8 +361,8 @@ td:first-child { text-align: left; color: #94a3b8; font-family: Arial, sans-seri
   </div>
   <div id="portArea">
     <div class="g3" style="margin-bottom:14px">
-      <div class="field"><label>Mês da portabilidade</label><div class="cur-wrap" id="wPortMes"><div class="cur-display" id="dPortMes" onclick="focusCur('wPortMes')"><span class="cur-prefix"></span><span id="sPortMes">12</span>  <span class="caret"></span></div></div><input type="hidden" id="fPortMes" value="12"></div>
-      <div class="field"><label>Custo portabilidade (R$)</label><div class="cur-wrap" id="wPortCusto"><div class="cur-display" id="dPortCusto" onclick="focusCur('wPortCusto')"><span class="cur-prefix">R$</span><span id="sPortCusto">3.000</span>  <span class="caret"></span></div></div><input type="hidden" id="fPortCusto" value="3000"></div>
+      <div class="field"><label>Mês da portabilidade</label><input type="text" id="fPortMes" value="12" inputmode="numeric" autocomplete="off"></div>
+      <div class="field"><label>Custo portabilidade (R$)</label><input type="text" id="fPortCusto" value="3.000" inputmode="numeric" autocomplete="off"></div>
       <div class="field"><label>Continua amortizando?</label>
         <select id="fPortCont">
           <option value="1">Sim — mantém R$7k/mês</option>
@@ -448,108 +425,79 @@ td:first-child { text-align: left; color: #94a3b8; font-family: Arial, sans-seri
 </div>
 
 <script>
-// ─── CURRENCY INPUT SYSTEM ────────────────────────────────────────
-// Each cur-wrap has: hidden input (fXxx), display span (sXxx), wrapper div (wXxx)
-// prefix: 'R$' for money fields, '' for plain numbers
-var CUR_FIELDS = [
-  {wrap:'wValor',   span:'sValor',   hidden:'fValor',    prefix:'R$', decimals:false},
-  {wrap:'wEntrada', span:'sEntrada', hidden:'fEntrada',  prefix:'R$', decimals:false},
-  {wrap:'wPrazo',   span:'sPrazo',   hidden:'fPrazo',    prefix:'',   decimals:false},
-  {wrap:'wOrc',     span:'sOrc',     hidden:'fOrc',      prefix:'R$', decimals:false},
-  {wrap:'wExtra',   span:'sExtra',   hidden:'fExtra',    prefix:'',   decimals:false},
-  {wrap:'wPortMes', span:'sPortMes', hidden:'fPortMes',  prefix:'',   decimals:false},
-  {wrap:'wPortCusto',span:'sPortCusto',hidden:'fPortCusto',prefix:'R$',decimals:false},
-];
+// ─── FORMATTED NUMBER INPUTS ─────────────────────────────────────
+// Applies pt-BR thousand separators while typing, preserves caret.
+// Fields: fValor, fEntrada, fOrc, fPortCusto use R$ formatting.
+// Fields: fPrazo, fExtra, fPortMes use plain integer formatting.
 
-var activeCur = null;  // current field being edited
-var curRaw = '';       // raw digit string being typed
+var MONEY_IDS  = ['fValor','fEntrada','fOrc','fPortCusto'];
+var NUMBER_IDS = ['fPrazo','fExtra','fPortMes'];
+var ALL_FMT    = MONEY_IDS.concat(NUMBER_IDS);
 
-function ptBR(n) {
-  return Math.round(n).toLocaleString('pt-BR');
+function rawNum(str) {
+  // strip everything except digits
+  return str.replace(/\D/g, '');
 }
 
-function focusCur(wrapId) {
-  // find field config
-  var cfg = null;
-  for (var k = 0; k < CUR_FIELDS.length; k++) {
-    if (CUR_FIELDS[k].wrap === wrapId) { cfg = CUR_FIELDS[k]; break; }
-  }
-  if (!cfg) return;
+function fmtPtBR(digits) {
+  // format digit string as pt-BR integer with thousand separators
+  if (!digits) return '';
+  var n = parseInt(digits, 10);
+  if (isNaN(n)) return '';
+  return n.toLocaleString('pt-BR');
+}
 
-  // if same field, do nothing
-  if (activeCur && activeCur.wrap === wrapId) return;
+function getNumericValue(id) {
+  var el = document.getElementById(id);
+  if (!el) return 0;
+  return parseInt(rawNum(el.value), 10) || 0;
+}
 
-  // blur any active
-  blurCur();
-
-  activeCur = cfg;
-  curRaw = document.getElementById(cfg.hidden).value.replace(/\D/g,'');
-  document.getElementById(cfg.wrap).classList.add('editing');
-  updateCurDisplay();
-  // listen keyboard globally
-  document.addEventListener('keydown', onCurKey);
+function attachFormatter(id) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  el.addEventListener('input', function() {
+    var sel = el.selectionStart;
+    var oldVal = el.value;
+    var digits = rawNum(oldVal);
+    var formatted = fmtPtBR(digits);
+    el.value = formatted;
+    // Adjust caret: count how many non-digit chars are before the old caret
+    // Simple approach: place caret at end unless user was in middle
+    var oldDigitsBefore = rawNum(oldVal.slice(0, sel)).length;
+    // find position in new string after oldDigitsBefore digits
+    var newPos = 0, count = 0;
+    while (newPos < formatted.length && count < oldDigitsBefore) {
+      if (/\d/.test(formatted[newPos])) count++;
+      newPos++;
+    }
+    el.setSelectionRange(newPos, newPos);
+    updateEntradaInfo();
+  });
+  el.addEventListener('focus', function() {
+    el.style.caretColor = '#4ade80';
+  });
+  el.addEventListener('blur', function() {
+    // reformat on blur to clean up
+    var digits = rawNum(el.value);
+    el.value = fmtPtBR(digits) || '';
+    updateEntradaInfo();
+  });
+  // Allow only digit keys, navigation and editing shortcuts
+  el.addEventListener('keydown', function(e) {
+    var allowed = ['Backspace','Delete','Tab','Escape','Enter',
+                   'ArrowLeft','ArrowRight','ArrowUp','ArrowDown',
+                   'Home','End'];
+    if (allowed.indexOf(e.key) !== -1) return;
+    if ((e.ctrlKey || e.metaKey) && ['a','c','v','x','z'].indexOf(e.key.toLowerCase()) !== -1) return;
+    if (!/^[0-9]$/.test(e.key)) e.preventDefault();
+  });
 }
 
 function blurCur() {
-  if (!activeCur) return;
-  document.getElementById(activeCur.wrap).classList.remove('editing');
-  document.removeEventListener('keydown', onCurKey);
-  activeCur = null;
-  curRaw = '';
-  // update entrada info if relevant
+  // no-op shim — kept for compatibility with share/load code
   updateEntradaInfo();
 }
-
-function onCurKey(e) {
-  if (!activeCur) return;
-  if (e.key >= '0' && e.key <= '9') {
-    curRaw += e.key;
-    e.preventDefault();
-  } else if (e.key === 'Backspace') {
-    curRaw = curRaw.slice(0, -1);
-    e.preventDefault();
-  } else if (e.key === 'Enter' || e.key === 'Tab') {
-    blurCur();
-    return;
-  } else if (e.key === 'Escape') {
-    blurCur();
-    return;
-  } else {
-    e.preventDefault();
-    return;
-  }
-  updateCurDisplay();
-}
-
-function updateCurDisplay() {
-  if (!activeCur) return;
-  var raw = curRaw || '0';
-  var num = parseInt(raw, 10) || 0;
-  document.getElementById(activeCur.hidden).value = num;
-  document.getElementById(activeCur.span).textContent = ptBR(num);
-  if (activeCur.wrap === 'wValor' || activeCur.wrap === 'wEntrada') updateEntradaInfo();
-}
-
-function updateEntradaInfo() {
-  var valor   = parseInt(document.getElementById('fValor').value, 10)   || 0;
-  var entrada = parseInt(document.getElementById('fEntrada').value, 10) || 0;
-  var pv      = valor - entrada;
-  var pct     = valor > 0 ? (entrada / valor * 100).toFixed(1) : 0;
-  var el      = document.getElementById('entradaInfo');
-  if (el && valor > 0) {
-    var cor = parseFloat(pct) >= 20 ? '#4ade80' : '#f87171';
-    el.innerHTML = 'Entrada: <b style="color:'+cor+'">' + pct + '%</b> do imóvel — '
-      + 'Valor financiado: <b style="color:#e2e8f0">R$ ' + ptBR(pv) + '</b>'
-      + (parseFloat(pct) < 20 ? ' &nbsp;<span style="color:#f87171;font-size:10px">⚠️ mín. recomendado: 20%</span>' : '');
-  }
-}
-
-// Dismiss on outside click
-document.addEventListener('click', function(e) {
-  if (!activeCur) return;
-  var wrap = document.getElementById(activeCur.wrap);
-  if (wrap && !wrap.contains(e.target)) blurCur();
-});
 
 // ─── TAXA DATA ────────────────────────────────────────────────────
 var TX = [
@@ -868,16 +816,16 @@ function buildTable(rows,tdCls,hlCls,nExtra,portMes,usePort){
 function gerarURL() {
   blurCur();
   var p = new URLSearchParams();
-  p.set('valor',      document.getElementById('fValor').value);
-  p.set('entrada',    document.getElementById('fEntrada').value);
-  p.set('prazo',      document.getElementById('fPrazo').value);
-  p.set('orc',        document.getElementById('fOrc').value);
-  p.set('extra',      document.getElementById('fExtra').value);
+  p.set('valor',      getNumericValue('fValor'));
+  p.set('entrada',    getNumericValue('fEntrada'));
+  p.set('prazo',      getNumericValue('fPrazo'));
+  p.set('orc',        getNumericValue('fOrc'));
+  p.set('extra',      getNumericValue('fExtra'));
   p.set('txOrig',     selOrig === -1 ? 'c' + document.getElementById('fOrigCustom').value : String(selOrig));
   p.set('port',       document.getElementById('chkPort').checked ? '1' : '0');
   if (document.getElementById('chkPort').checked) {
     p.set('portMes',   document.getElementById('fPortMes').value);
-    p.set('portCusto', document.getElementById('fPortCusto').value);
+    p.set('portCusto', getNumericValue('fPortCusto'));
     p.set('portCont',  document.getElementById('fPortCont').value);
     p.set('txPort',    selPort === -1 ? 'c' + document.getElementById('fPortCustom').value : String(selPort));
   }
@@ -905,16 +853,17 @@ function carregarDeURL() {
   var p = new URLSearchParams(window.location.search);
   if (!p.has('valor')) return;
 
-  function setCurField(hiddenId, spanId, val) {
-    document.getElementById(hiddenId).value = val;
-    document.getElementById(spanId).textContent = Math.round(val).toLocaleString('pt-BR');
+  function setFmtField(id, val) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    el.value = parseInt(val, 10).toLocaleString('pt-BR');
   }
 
-  if (p.has('valor'))   setCurField('fValor',   'sValor',   p.get('valor'));
-  if (p.has('entrada')) setCurField('fEntrada', 'sEntrada', p.get('entrada'));
-  if (p.has('prazo'))   setCurField('fPrazo',   'sPrazo',   p.get('prazo'));
-  if (p.has('orc'))     setCurField('fOrc',     'sOrc',     p.get('orc'));
-  if (p.has('extra'))   setCurField('fExtra',   'sExtra',   p.get('extra'));
+  if (p.has('valor'))   setFmtField('fValor',    p.get('valor'));
+  if (p.has('entrada')) setFmtField('fEntrada',  p.get('entrada'));
+  if (p.has('prazo'))   setFmtField('fPrazo',    p.get('prazo'));
+  if (p.has('orc'))     setFmtField('fOrc',      p.get('orc'));
+  if (p.has('extra'))   setFmtField('fExtra',    p.get('extra'));
 
   if (p.has('txOrig')) {
     var tx = p.get('txOrig');
@@ -972,6 +921,8 @@ function baixarPDF() {
 }
 
 // ─── INIT ─────────────────────────────────────────────────────────
+// Attach live formatters to all numeric text inputs
+ALL_FMT.forEach(function(id) { attachFormatter(id); });
 renderTaxaGrid('tgOrig','tdOrig','ciOrig','fOrigCustom',selOrig);
 renderTaxaGrid('tgPort','tdPort','ciPort','fPortCustom',selPort);
 updateEntradaInfo();
@@ -990,10 +941,6 @@ carregarDeURL();
 
   </div><!-- /.mid-row -->
 
-  <!-- ═══ AD: BANNER RODAPÉ ═══════════════════════════════════════
-       Formato recomendado: Leaderboard 728x90 (desktop) / Banner 320x50 (mobile)
-       Troque data-ad-slot="XXXXXXXXXX" pelo seu Slot ID
-  ═══════════════════════════════════════════════════════════════ -->
   <div class="ad-bar bottom">
     <div class="ad-bar-label">Publicidade</div>
     <ins class="adsbygoogle"
