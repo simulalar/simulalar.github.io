@@ -3,10 +3,37 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Simulador de Financiamento Imobiliário</title>
+<title>Simulador de Financiamento Imobiliário 2026 — SAC, PRICE, Portabilidade e Amortização Extra</title>
+
+<!-- ══ SEO / AI DISCOVERABILITY ════════════════════════════════════
+     Substitua https://seusite.com.br/ pela URL real da página
+═════════════════════════════════════════════════════════════════ -->
+<meta name="description" content="Simule seu financiamento imobiliário gratuitamente. Compare SAC e PRICE, calcule o impacto da amortização extra, simule portabilidade de crédito e descubra quanto você economiza. Taxas de 10,5% a 14% a.a. com análise de realismo baseada na Selic 2026.">
+<meta name="keywords" content="simulador financiamento imobiliário, SAC, PRICE, amortização extra, portabilidade crédito, calculadora financiamento, juros imóvel, CEF, tabela price, tabela SAC, financiamento 2026">
+<meta name="author" content="Simulador de Financiamento">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://seusite.com.br/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://seusite.com.br/">
+<meta property="og:title" content="Simulador de Financiamento Imobiliário 2026 — SAC, PRICE e Portabilidade">
+<meta property="og:description" content="Compare SAC e PRICE, simule amortização extra e portabilidade de crédito. Calcule quanto você economiza no seu financiamento imobiliário.">
+<meta property="og:image" content="https://seusite.com.br/og-image.png">
+<meta property="og:locale" content="pt_BR">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Simulador de Financiamento Imobiliário 2026">
+<meta name="twitter:description" content="Compare SAC e PRICE, simule amortização extra e portabilidade. Grátis e completo.">
+<meta name="twitter:image" content="https://seusite.com.br/og-image.png">
+<meta name="application-name" content="Simulador de Financiamento Imobiliário">
+<meta name="category" content="Finanças Pessoais, Imóveis, Calculadora">
+<meta name="coverage" content="Brasil">
+<meta name="language" content="pt-BR">
+<meta name="description:detailed" content="Ferramenta gratuita para simulação de financiamento imobiliário no Brasil. Suporta Tabela SAC (amortização natural e recalculada) e PRICE (redução de prazo ou parcela). Simula portabilidade de crédito com troca de taxa em qualquer mês, amortização extra com reinvestimento automático e URL compartilhável com todos os parâmetros.">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Simulador de Financiamento Imobiliário","url":"https://seusite.com.br/","description":"Simulador gratuito de financiamento imobiliário com SAC, PRICE, amortização extra, portabilidade e compartilhamento por URL.","applicationCategory":"FinanceApplication","operatingSystem":"Web","inLanguage":"pt-BR","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"BRL"},"featureList":["Tabela SAC natural e recalculada","Tabela PRICE com redução de prazo ou parcela","Portabilidade de crédito","Amortização extra com reinvestimento automático","Análise de realismo das taxas (Selic 2026)","URL compartilhável","Download em PDF","Taxa personalizada"]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Qual a diferença entre SAC e PRICE?","acceptedAnswer":{"@type":"Answer","text":"No SAC a amortização é fixa e a parcela cai com o tempo. No PRICE a parcela é fixa, mas o total de juros é maior."}},{"@type":"Question","name":"Vale a pena fazer portabilidade de crédito imobiliário?","acceptedAnswer":{"@type":"Answer","text":"Sim, quando a diferença de taxa compensa o custo da portabilidade (~R$3.000). Use o simulador para calcular a economia líquida."}},{"@type":"Question","name":"O que é amortização extra?","acceptedAnswer":{"@type":"Answer","text":"É pagar acima da parcela para abater o saldo devedor, reduzindo prazo, parcelas futuras ou ambos."}}]}]}
+</script>
 
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6217036542616408"
-     crossorigin="anonymous"></script> 
+     crossorigin="anonymous"></script>
 
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -190,6 +217,74 @@ td:first-child { text-align: left; color: #94a3b8; font-family: Arial, sans-seri
 }
 .cur-wrap.editing .cur-display { border-color: #4ade80; }
 .cur-prefix { color: #64748b; margin-right: 3px; font-size: 13px; }
+
+/* ── ACTION BUTTONS (PDF + Share) ────────── */
+.action-bar {
+  display: flex; gap: 12px; margin: 24px 0 8px; flex-wrap: wrap;
+}
+.act-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 11px 20px; border-radius: 10px; border: none;
+  font-size: 13px; font-weight: bold; cursor: pointer;
+  font-family: Arial, sans-serif; transition: all .15s;
+}
+.act-share {
+  background: rgba(96,165,250,.12); color: #60a5fa;
+  border: 1px solid rgba(96,165,250,.35);
+}
+.act-share:hover { background: rgba(96,165,250,.2); }
+.act-pdf {
+  background: rgba(74,222,128,.12); color: #4ade80;
+  border: 1px solid rgba(74,222,128,.35);
+}
+.act-pdf:hover { background: rgba(74,222,128,.2); }
+
+/* ── SHARE TOAST ─────────────────────────── */
+.share-toast {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+  z-index: 9999; width: min(520px, 92vw);
+  animation: slideUp .2s ease;
+}
+@keyframes slideUp { from { opacity:0; transform: translateX(-50%) translateY(12px); } to { opacity:1; transform: translateX(-50%) translateY(0); } }
+.share-toast-inner {
+  background: #1e2330; border: 1px solid rgba(96,165,250,.4);
+  border-radius: 14px; padding: 18px 20px; box-shadow: 0 8px 32px rgba(0,0,0,.6);
+}
+.share-toast-title { font-size: 14px; font-weight: bold; color: #60a5fa; margin-bottom: 8px; }
+.share-toast-url {
+  background: #141720; border: 1px solid #2d3448; border-radius: 7px;
+  padding: 8px 12px; font-family: monospace; font-size: 11px; color: #94a3b8;
+  word-break: break-all; margin-bottom: 8px; max-height: 60px; overflow-y: auto;
+}
+.share-toast-note { font-size: 11px; color: #64748b; margin-bottom: 12px; }
+.share-toast-close {
+  background: rgba(96,165,250,.15); color: #60a5fa; border: 1px solid rgba(96,165,250,.3);
+  border-radius: 7px; padding: 6px 16px; font-size: 12px; cursor: pointer;
+  font-family: Arial, sans-serif;
+}
+
+/* ── PRINT / PDF ─────────────────────────── */
+@media print {
+  .ad-bar, .ad-side, .action-bar, .share-toast,
+  #btnSim, .tabs, .tb-btn { display: none !important; }
+  body { background: #fff !important; color: #000 !important; }
+  .box, .card, .tbl-box, .ch-box, .ibar, .pbanner {
+    border-color: #ccc !important; background: #fff !important;
+    box-shadow: none !important;
+  }
+  .page { max-width: 100% !important; padding: 0 !important; }
+  .outer { display: block !important; }
+  .mid-row { display: block !important; }
+  h1, .c-tit, .sec, .ii-v { color: #000 !important; }
+  .st-k, .ch-lbl, .box-title, .chlbl { color: #444 !important; }
+  .st-v { color: #000 !important; }
+  table, td, th { color: #000 !important; border-color: #ccc !important; }
+  thead th { background: #f5f5f5 !important; }
+  .tbl-box .hidden { display: block !important; }
+  .c-bar { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+  svg text { fill: #333 !important; }
+  svg line { stroke: #ccc !important; }
+}
 </style>
 </head>
 <body>
@@ -203,7 +298,7 @@ td:first-child { text-align: left; color: #94a3b8; font-family: Arial, sans-seri
     <div class="ad-bar-label">Publicidade</div>
     <ins class="adsbygoogle"
          style="display:block;width:100%;min-height:50px;"
-         data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+         data-ad-client="ca-pub-6217036542616408"
          data-ad-slot="XXXXXXXXXX"
          data-ad-format="auto"
          data-full-width-responsive="true"></ins>
@@ -221,7 +316,7 @@ td:first-child { text-align: left; color: #94a3b8; font-family: Arial, sans-seri
       <div class="ad-side-label">Publicidade</div>
       <ins class="adsbygoogle"
            style="display:inline-block;width:160px;height:600px"
-           data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+           data-ad-client="ca-pub-6217036542616408"
            data-ad-slot="XXXXXXXXXX"></ins>
       <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
     </div>
@@ -302,6 +397,28 @@ td:first-child { text-align: left; color: #94a3b8; font-family: Arial, sans-seri
   <div class="sec">Tabela Mensal</div>
   <div class="tabs" id="tabs"></div>
   <div id="tbls"></div>
+
+  <!-- ACTION BUTTONS -->
+  <div class="action-bar" id="actionBar">
+    <button class="act-btn act-share" onclick="compartilhar()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+      Compartilhar simulação
+    </button>
+    <button class="act-btn act-pdf" onclick="baixarPDF()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Baixar PDF
+    </button>
+  </div>
+
+  <!-- SHARE TOAST -->
+  <div id="shareToast" class="share-toast hidden">
+    <div class="share-toast-inner">
+      <div class="share-toast-title">🔗 Link copiado!</div>
+      <div class="share-toast-url" id="shareUrl"></div>
+      <div class="share-toast-note">Quem abrir este link verá exatamente esta simulação.</div>
+      <button onclick="document.getElementById('shareToast').classList.add('hidden')" class="share-toast-close">Fechar</button>
+    </div>
+  </div>
 </div>
 </div>
 
@@ -721,24 +838,127 @@ function buildTable(rows,tdCls,hlCls,nExtra,portMes,usePort){
   return h+'</tbody></table>';
 }
 
+
+// ─── SHARE URL ────────────────────────────────────────────────────
+function gerarURL() {
+  blurCur();
+  var p = new URLSearchParams();
+  p.set('valor',      document.getElementById('fValor').value);
+  p.set('entrada',    document.getElementById('fEntrada').value);
+  p.set('prazo',      document.getElementById('fPrazo').value);
+  p.set('orc',        document.getElementById('fOrc').value);
+  p.set('extra',      document.getElementById('fExtra').value);
+  p.set('txOrig',     selOrig === -1 ? 'c' + document.getElementById('fOrigCustom').value : String(selOrig));
+  p.set('port',       document.getElementById('chkPort').checked ? '1' : '0');
+  if (document.getElementById('chkPort').checked) {
+    p.set('portMes',   document.getElementById('fPortMes').value);
+    p.set('portCusto', document.getElementById('fPortCusto').value);
+    p.set('portCont',  document.getElementById('fPortCont').value);
+    p.set('txPort',    selPort === -1 ? 'c' + document.getElementById('fPortCustom').value : String(selPort));
+  }
+  return window.location.href.split('?')[0] + '?' + p.toString();
+}
+
+function compartilhar() {
+  var url = gerarURL();
+  var toast = document.getElementById('shareToast');
+  document.getElementById('shareUrl').textContent = url;
+  toast.classList.remove('hidden');
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(url).catch(function(){});
+  } else {
+    var ta = document.createElement('textarea');
+    ta.value = url; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    try { document.execCommand('copy'); } catch(e) {}
+    document.body.removeChild(ta);
+  }
+}
+
+// ─── LOAD FROM URL PARAMS ─────────────────────────────────────────
+function carregarDeURL() {
+  var p = new URLSearchParams(window.location.search);
+  if (!p.has('valor')) return;
+
+  function setCurField(hiddenId, spanId, val) {
+    document.getElementById(hiddenId).value = val;
+    document.getElementById(spanId).textContent = Math.round(val).toLocaleString('pt-BR');
+  }
+
+  if (p.has('valor'))   setCurField('fValor',   'sValor',   p.get('valor'));
+  if (p.has('entrada')) setCurField('fEntrada', 'sEntrada', p.get('entrada'));
+  if (p.has('prazo'))   setCurField('fPrazo',   'sPrazo',   p.get('prazo'));
+  if (p.has('orc'))     setCurField('fOrc',     'sOrc',     p.get('orc'));
+  if (p.has('extra'))   setCurField('fExtra',   'sExtra',   p.get('extra'));
+
+  if (p.has('txOrig')) {
+    var tx = p.get('txOrig');
+    if (tx.charAt(0) === 'c') {
+      selOrig = -1;
+      document.getElementById('fOrigCustom').value = tx.slice(1);
+    } else {
+      selOrig = parseInt(tx, 10);
+    }
+    renderTaxaGrid('tgOrig','tdOrig','ciOrig','fOrigCustom', selOrig);
+  }
+
+  if (p.has('port')) {
+    var usePort = p.get('port') === '1';
+    document.getElementById('chkPort').checked = usePort;
+    document.getElementById('portArea').style.display = usePort ? 'block' : 'none';
+    if (usePort) {
+      if (p.has('portMes'))   setCurField('fPortMes',   'sPortMes',   p.get('portMes'));
+      if (p.has('portCusto')) setCurField('fPortCusto', 'sPortCusto', p.get('portCusto'));
+      if (p.has('portCont'))  document.getElementById('fPortCont').value = p.get('portCont');
+      if (p.has('txPort')) {
+        var tp = p.get('txPort');
+        if (tp.charAt(0) === 'c') {
+          selPort = -1;
+          document.getElementById('fPortCustom').value = tp.slice(1);
+        } else {
+          selPort = parseInt(tp, 10);
+        }
+        renderTaxaGrid('tgPort','tdPort','ciPort','fPortCustom', selPort);
+      }
+    }
+  }
+
+  updateEntradaInfo();
+  // Auto-simulate if params present
+  document.getElementById('btnSim').click();
+}
+
+// ─── PDF DOWNLOAD ─────────────────────────────────────────────────
+function baixarPDF() {
+  // Ensure all tabs are visible for print
+  ['tb0','tb1','tb2','tb3'].forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) el.classList.remove('hidden');
+  });
+  var title = document.title;
+  document.title = 'Simulacao_Financiamento';
+  window.print();
+  document.title = title;
+  // Restore tab state — show only first tab
+  ['tb1','tb2','tb3'].forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) el.classList.add('hidden');
+  });
+}
+
 // ─── INIT ─────────────────────────────────────────────────────────
 renderTaxaGrid('tgOrig','tdOrig','ciOrig','fOrigCustom',selOrig);
 renderTaxaGrid('tgPort','tdPort','ciPort','fPortCustom',selPort);
 updateEntradaInfo();
+carregarDeURL();
 </script>
 
     </div><!-- /.page -->
-
-    <!-- ═══ AD: SIDEBAR DIREITA ═════════════════════════════════════
-         Formato recomendado: Wide Skyscraper 160x600
-         Visível apenas em telas ≥ 1380px
-         Troque data-ad-slot="XXXXXXXXXX" pelo seu Slot ID
-    ═══════════════════════════════════════════════════════════════ -->
     <div class="ad-side right">
       <div class="ad-side-label">Publicidade</div>
       <ins class="adsbygoogle"
            style="display:inline-block;width:160px;height:600px"
-           data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+           data-ad-client="ca-pub-6217036542616408"
            data-ad-slot="XXXXXXXXXX"></ins>
       <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
     </div>
@@ -753,7 +973,7 @@ updateEntradaInfo();
     <div class="ad-bar-label">Publicidade</div>
     <ins class="adsbygoogle"
          style="display:block;width:100%;min-height:50px;"
-         data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+         data-ad-client="ca-pub-6217036542616408"
          data-ad-slot="XXXXXXXXXX"
          data-ad-format="auto"
          data-full-width-responsive="true"></ins>
