@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simulador de Financiamento Imobiliário</title>
+
+<!-- ═══════════════════════════════════════════
+     GOOGLE ADSENSE
+     1. Substitua ca-pub-XXXXXXXXXXXXXXXX pelo seu Publisher ID
+     2. Em cada bloco <ins> abaixo, coloque o data-ad-slot correto
+     ═══════════════════════════════════════════ -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX"
+     crossorigin="anonymous"></script>
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: Arial, sans-serif; background: #0f1117; color: #e2e8f0; min-height: 100vh; }
+
+/* ── LAYOUT WRAPPER ─────────────────────────── */
+.outer { display: flex; flex-direction: column; min-height: 100vh; }
+
+/* ── AD: BANNER HORIZONTAL (topo / rodapé) ──── */
+.ad-bar {
+  width: 100%; background: #13161e;
+  border-bottom: 1px solid #1e2330;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 4px 0; overflow: hidden;
+}
+.ad-bar.bottom { border-bottom: none; border-top: 1px solid #1e2330; }
+.ad-bar-label {
+  font-size: 9px; text-transform: uppercase; letter-spacing: 0.12em;
+  color: #2d3448; margin-bottom: 3px;
+}
+.ad-bar ins.adsbygoogle { display: block; }
+
+/* ── AD: SIDEBAR (desktop ≥ 1380px) ──────────── */
+.mid-row {
+  display: flex; flex: 1;
+  align-items: flex-start; justify-content: center;
+}
+.ad-side {
+  width: 160px; flex-shrink: 0;
+  padding: 12px 8px;
+  display: none; /* hidden on mobile */
+  flex-direction: column; align-items: center; gap: 8px;
+}
+.ad-side-label {
+  font-size: 9px; text-transform: uppercase; letter-spacing: 0.1em;
+  color: #2d3448; margin-bottom: 2px;
+}
+.ad-side ins.adsbygoogle { display: block; }
+
+@media (min-width: 1380px) {
+  .ad-side { display: flex; }
+}
+
+/* ── CONTEÚDO PRINCIPAL ──────────────────────── */
+.page { max-width: 1100px; width: 100%; margin: 0 auto; padding: 28px 16px; }
+h1 { font-size: 22px; font-weight: bold; margin-bottom: 4px; color: #f1f5f9; }
+.sub { color: #64748b; font-size: 13px; margin-bottom: 24px; }
+.box { background: #1e2330; border: 1px solid #2d3448; border-radius: 12px; padding: 20px; margin-bottom: 16px; }
+.box-title { font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: #64748b; margin-bottom: 14px; font-weight: bold; }
+.box-port { border-color: rgba(251,146,60,0.35); }
+.box-title-port { font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: #fb923c; margin-bottom: 14px; font-weight: bold; }
+.g5 { display: grid; grid-template-columns: repeat(5,1fr); gap: 12px; align-items: end; }
+.g3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; align-items: end; }
+@media(max-width:700px){.g5,.g3{grid-template-columns:1fr 1fr}}
+.field label { display: block; font-size: 10px; color: #64748b; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.08em; }
+.field input, .field select { width: 100%; background: #141720; border: 1px solid #2d3448; border-radius: 8px; color: #e2e8f0; font-size: 14px; padding: 9px 12px; outline: none; font-family: monospace; }
+.field input:focus, .field select:focus { border-color: #4ade80; }
+.field select option { background: #1e2330; }
+.toggle-row { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+.sw { position: relative; width: 42px; height: 22px; flex-shrink: 0; display: inline-block; }
+.sw input { opacity: 0; width: 0; height: 0; }
+.sl { position: absolute; inset: 0; background: #2d3448; border-radius: 22px; cursor: pointer; transition: .2s; }
+.sl:before { content: ''; position: absolute; width: 16px; height: 16px; left: 3px; top: 3px; background: #64748b; border-radius: 50%; transition: .2s; }
+.sw input:checked + .sl { background: rgba(251,146,60,0.3); }
+.sw input:checked + .sl:before { transform: translateX(20px); background: #fb923c; }
+.btn { background: #4ade80; color: #000; border: none; border-radius: 8px; padding: 11px 20px; font-size: 14px; font-weight: bold; cursor: pointer; width: 100%; font-family: Arial, sans-serif; }
+.btn:hover { background: #86efac; }
+
+/* TAXA SELECTOR */
+.taxa-wrap { margin-bottom: 12px; }
+.taxa-row { display: flex; flex-wrap: wrap; gap: 6px; }
+.tp {
+  cursor: pointer; border: 1px solid #2d3448; border-radius: 8px;
+  background: #141720; padding: 7px 10px; min-width: 72px;
+  display: inline-block; text-align: center; transition: all .12s; user-select: none;
+}
+.tp:hover { border-color: #4a5568; }
+.tp.sel { border-color: #f59e0b; background: rgba(245,158,11,.08); }
+.tp-num { display: block; font-size: 13px; font-weight: bold; color: #e2e8f0; font-family: monospace; margin-bottom: 4px; }
+.tp.sel .tp-num { color: #f59e0b; }
+.tp-tag { display: block; font-size: 9px; font-weight: bold; text-transform: uppercase; padding: 1px 4px; border-radius: 3px; }
+.ti { background: rgba(239,68,68,.15); color: #ef4444; }
+.td_ { background: rgba(234,179,8,.15); color: #eab308; }
+.tp_ { background: rgba(163,230,53,.15); color: #84cc16; }
+.tr_ { background: rgba(74,222,128,.15); color: #4ade80; }
+.tc_ { background: rgba(96,165,250,.15); color: #60a5fa; }
+.te_ { background: rgba(167,139,250,.15); color: #a78bfa; }
+.taxa-desc { background: #141720; border: 1px solid #2d3448; border-radius: 8px; padding: 10px 14px; font-size: 12px; color: #94a3b8; line-height: 1.5; }
+.taxa-desc b { color: #e2e8f0; }
+
+/* INFO BAR */
+.ibar { display: flex; flex-wrap: wrap; gap: 20px; background: #1e2330; border: 1px solid #2d3448; border-radius: 10px; padding: 13px 18px; margin-bottom: 16px; }
+.ii-k { font-size: 10px; color: #64748b; text-transform: uppercase; letter-spacing: 0.08em; }
+.ii-v { font-size: 17px; font-weight: bold; color: #f1f5f9; }
+.ii-v small { font-size: 11px; color: #64748b; font-weight: normal; }
+
+/* PORT BANNER */
+.pbanner { background: rgba(251,146,60,.07); border: 1px solid rgba(251,146,60,.3); border-radius: 10px; padding: 14px 16px; margin-bottom: 16px; }
+.pbanner h3 { font-size: 14px; color: #fb923c; margin-bottom: 5px; }
+.pbanner p { font-size: 12px; color: #94a3b8; line-height: 1.6; }
+.pbanner b { color: #e2e8f0; }
+
+/* 4 CARDS */
+.cards { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; margin-bottom: 18px; }
+@media(max-width:900px){.cards{grid-template-columns:1fr 1fr}}
+@media(max-width:480px){.cards{grid-template-columns:1fr}}
+.card { background: #1e2330; border: 1px solid #2d3448; border-radius: 12px; overflow: hidden; }
+.card.win { border-color: rgba(74,222,128,.5); }
+.c-bar { height: 3px; }
+.c-head { padding: 13px 13px 9px; border-bottom: 1px solid #2d3448; }
+.c-tipo { font-size: 9px; text-transform: uppercase; letter-spacing: .1em; margin-bottom: 3px; font-weight: bold; }
+.c-tit { font-size: 12px; font-weight: bold; color: #f1f5f9; line-height: 1.3; }
+.c-win { display: inline-block; background: rgba(74,222,128,.12); color: #4ade80; border: 1px solid rgba(74,222,128,.3); border-radius: 20px; padding: 2px 7px; font-size: 9px; margin-top: 5px; }
+.c-body { padding: 9px 13px; }
+.st { display: flex; justify-content: space-between; align-items: baseline; padding: 5px 0; border-bottom: 1px solid rgba(45,52,72,.5); gap: 6px; }
+.st:last-child { border-bottom: none; }
+.st-div { border-top: 1px solid rgba(251,146,60,.2); padding-top: 7px; margin-top: 3px; }
+.st-k { font-size: 10px; color: #64748b; }
+.st-v { font-size: 10px; font-family: monospace; font-weight: bold; text-align: right; }
+.cg{color:#4ade80}.ct{color:#34d399}.cb{color:#60a5fa}.cp{color:#a78bfa}
+.cy{color:#f59e0b}.cr{color:#f87171}.co{color:#fb923c}.cd{color:#64748b}
+
+/* CHART */
+.ch-box { background: #1e2330; border: 1px solid #2d3448; border-radius: 12px; padding: 18px; margin-bottom: 18px; }
+.ch-lbl { font-size: 10px; text-transform: uppercase; letter-spacing: .1em; color: #64748b; margin-bottom: 14px; }
+svg.ch { width: 100%; overflow: visible; display: block; }
+.leg { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 10px; }
+.li { display: flex; align-items: center; gap: 6px; font-size: 11px; color: #64748b; font-family: monospace; }
+.ld { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+/* TABS + TABLE */
+.sec { font-size: 16px; font-weight: bold; margin: 20px 0 10px; padding-bottom: 7px; border-bottom: 1px solid #2d3448; color: #f1f5f9; }
+.tabs { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 10px; }
+.tb-btn { background: #1e2330; border: 1px solid #2d3448; border-radius: 7px; color: #64748b; font-size: 11px; padding: 5px 11px; cursor: pointer; font-family: Arial, sans-serif; }
+.on-g{background:rgba(74,222,128,.12);color:#4ade80;border-color:rgba(74,222,128,.4)}
+.on-t{background:rgba(52,211,153,.12);color:#34d399;border-color:rgba(52,211,153,.4)}
+.on-b{background:rgba(96,165,250,.12);color:#60a5fa;border-color:rgba(96,165,250,.4)}
+.on-p{background:rgba(167,139,250,.12);color:#a78bfa;border-color:rgba(167,139,250,.4)}
+.tbl-box { background: #1e2330; border: 1px solid #2d3448; border-radius: 12px; overflow: hidden; margin-bottom: 20px; }
+.tbl-scr { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; min-width: 600px; }
+thead th { background: #141720; padding: 8px 11px; text-align: right; font-size: 9px; text-transform: uppercase; letter-spacing: .08em; color: #64748b; border-bottom: 1px solid #2d3448; font-weight: bold; white-space: nowrap; }
+thead th:first-child { text-align: left; }
+tbody tr { border-bottom: 1px solid rgba(45,52,72,.35); }
+tbody tr:hover { background: rgba(255,255,255,.02); }
+.row-port { background: rgba(251,146,60,.05); border-left: 2px solid #fb923c; }
+.row-end  { background: rgba(74,222,128,.04);  border-left: 2px solid #4ade80; }
+td { padding: 7px 11px; text-align: right; font-size: 11px; font-family: monospace; color: #e2e8f0; }
+td:first-child { text-align: left; color: #94a3b8; font-family: Arial, sans-serif; font-size: 11px; }
+.dg{color:#4ade80;font-weight:bold}.dt{color:#34d399;font-weight:bold}
+.db{color:#60a5fa;font-weight:bold}.dp{color:#a78bfa;font-weight:bold}
+.do{color:#fb923c;font-weight:bold}.de{color:#f59e0b}
+.tg{font-size:9px;padding:1px 5px;border-radius:3px;margin-left:4px;vertical-align:middle;font-family:Arial,sans-serif}
+.tg-p{background:rgba(251,146,60,.2);color:#fb923c}
+.tg-e{background:rgba(74,222,128,.2);color:#4ade80}
+.tg-x{background:rgba(245,158,11,.2);color:#f59e0b}
+.hidden { display: none; }
+.port-note { background: rgba(251,146,60,.06); border: 1px solid rgba(251,146,60,.2); border-radius: 8px; padding: 10px 14px; font-size: 12px; color: #94a3b8; line-height: 1.6; margin-top: 12px; }
+.port-note b { color: #fb923c; }
+
+/* CUSTOM TAXA */
+.tp.custom-pill { border-style: dashed; min-width: 90px; }
+.tp.custom-pill .tp-tag { background: rgba(148,163,184,.15); color: #94a3b8; }
+.custom-input-wrap { display: none; align-items: center; gap: 8px; margin-top: 10px; background: #141720; border: 1px solid #f59e0b; border-radius: 8px; padding: 8px 12px; }
+.custom-input-wrap.show { display: flex; }
+.custom-input-wrap label { font-size: 11px; color: #94a3b8; white-space: nowrap; }
+.custom-input-wrap input { background: transparent; border: none; outline: none; color: #f59e0b; font-size: 15px; font-family: monospace; font-weight: bold; width: 80px; }
+.custom-input-wrap span { font-size: 12px; color: #64748b; }
+
+/* CURRENCY INPUT — formatted display */
+.cur-wrap { position: relative; }
+.cur-display {
+  width: 100%; background: #141720; border: 1px solid #2d3448; border-radius: 8px;
+  color: #e2e8f0; font-size: 14px; padding: 9px 12px; font-family: monospace;
+  cursor: text; min-height: 38px; line-height: 20px;
+}
+.cur-display:focus-within { border-color: #4ade80; }
+.cur-display input {
+  position: absolute; opacity: 0; width: 1px; height: 1px; pointer-events: none;
+}
+.cur-wrap.editing .cur-display { border-color: #4ade80; }
+.cur-prefix { color: #64748b; margin-right: 3px; font-size: 13px; }
+</style>
+</head>
+<body>
+<div class="outer">
+
+  <!-- ═══ AD: BANNER TOPO ═══════════════════════════════════════════
+       Formato recomendado: Leaderboard 728x90 (desktop) / Banner 320x50 (mobile)
+       Troque data-ad-slot="XXXXXXXXXX" pelo seu Slot ID
+  ══════════════════════════════════════════════════════════════════ -->
+  <div class="ad-bar top">
+    <div class="ad-bar-label">Publicidade</div>
+    <ins class="adsbygoogle"
+         style="display:block;width:100%;min-height:50px;"
+         data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+         data-ad-slot="XXXXXXXXXX"
+         data-ad-format="auto"
+         data-full-width-responsive="true"></ins>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  </div>
+
+  <div class="mid-row">
+
+    <!-- ═══ AD: SIDEBAR ESQUERDA ════════════════════════════════════
+         Formato recomendado: Wide Skyscraper 160x600
+         Visível apenas em telas ≥ 1380px
+         Troque data-ad-slot="XXXXXXXXXX" pelo seu Slot ID
+    ═══════════════════════════════════════════════════════════════ -->
+    <div class="ad-side left">
+      <div class="ad-side-label">Publicidade</div>
+      <ins class="adsbygoogle"
+           style="display:inline-block;width:160px;height:600px"
+           data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+           data-ad-slot="XXXXXXXXXX"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
+    <div class="page">
+<h1>Simulador de Financiamento Imobiliário</h1>
+<p class="sub">4 estratégias · Amortização extra · Portabilidade · Selic 14,75%</p>
+
+<!-- PARAMS -->
+<div class="box">
+  <div class="box-title">Parâmetros do Financiamento</div>
+  <div class="g5">
+    <div class="field"><label>Valor do Imóvel (R$)</label><div class="cur-wrap" id="wValor"><div class="cur-display" id="dValor" onclick="focusCur('wValor')"><span class="cur-prefix">R$</span><span id="sValor">580.000</span></div></div><input type="hidden" id="fValor" value="580000"></div>
+    <div class="field"><label>Valor da Entrada (R$)</label><div class="cur-wrap" id="wEntrada"><div class="cur-display" id="dEntrada" onclick="focusCur('wEntrada')"><span class="cur-prefix">R$</span><span id="sEntrada">116.000</span></div></div><input type="hidden" id="fEntrada" value="116000"></div>
+    <div class="field"><label>Prazo (meses)</label><div class="cur-wrap" id="wPrazo"><div class="cur-display" id="dPrazo" onclick="focusCur('wPrazo')"><span class="cur-prefix"></span><span id="sPrazo">360</span></div></div><input type="hidden" id="fPrazo" value="360"></div>
+    <div class="field"><label>Orçamento mensal (R$)</label><div class="cur-wrap" id="wOrc"><div class="cur-display" id="dOrc" onclick="focusCur('wOrc')"><span class="cur-prefix">R$</span><span id="sOrc">7.000</span></div></div><input type="hidden" id="fOrc" value="7000"></div>
+    <div class="field"><label>Meses amortizando</label><div class="cur-wrap" id="wExtra"><div class="cur-display" id="dExtra" onclick="focusCur('wExtra')"><span class="cur-prefix"></span><span id="sExtra">24</span></div></div><input type="hidden" id="fExtra" value="24"></div>
+  </div>
+  <div id="entradaInfo" style="margin-top:8px;font-size:11px;color:#64748b"></div>
+</div>
+
+<!-- TAXA ORIGINAL -->
+<div class="box">
+  <div class="box-title">Taxa de Juros Original (% a.a.)</div>
+  <div class="taxa-row" id="tgOrig"></div>
+  <div class="custom-input-wrap" id="ciOrig">
+    <label>Taxa personalizada:</label>
+    <input type="number" id="fOrigCustom" min="1" max="30" step="0.01" value="" placeholder="ex: 10.25">
+    <span>% a.a.</span>
+  </div>
+  <div class="taxa-desc" id="tdOrig" style="margin-top:10px"></div>
+</div>
+
+<!-- PORTABILIDADE -->
+<div class="box box-port">
+  <div class="box-title-port">Portabilidade de Crédito</div>
+  <div class="toggle-row">
+    <label class="sw"><input type="checkbox" id="chkPort" checked><span class="sl"></span></label>
+    <span style="font-size:13px">Simular portabilidade</span>
+  </div>
+  <div id="portArea">
+    <div class="g3" style="margin-bottom:14px">
+      <div class="field"><label>Mês da portabilidade</label><div class="cur-wrap" id="wPortMes"><div class="cur-display" id="dPortMes" onclick="focusCur('wPortMes')"><span class="cur-prefix"></span><span id="sPortMes">12</span></div></div><input type="hidden" id="fPortMes" value="12"></div>
+      <div class="field"><label>Custo portabilidade (R$)</label><div class="cur-wrap" id="wPortCusto"><div class="cur-display" id="dPortCusto" onclick="focusCur('wPortCusto')"><span class="cur-prefix">R$</span><span id="sPortCusto">3.000</span></div></div><input type="hidden" id="fPortCusto" value="3000"></div>
+      <div class="field"><label>Continua amortizando?</label>
+        <select id="fPortCont">
+          <option value="1">Sim — mantém R$7k/mês</option>
+          <option value="0">Não — volta à parcela normal</option>
+        </select>
+      </div>
+    </div>
+    <div class="box-title" style="margin-bottom:10px">Nova taxa após portabilidade (% a.a.)</div>
+    <div class="taxa-row" id="tgPort"></div>
+    <div class="custom-input-wrap" id="ciPort">
+      <label>Taxa personalizada:</label>
+      <input type="number" id="fPortCustom" min="1" max="30" step="0.01" value="" placeholder="ex: 9.00">
+      <span>% a.a.</span>
+    </div>
+    <div class="taxa-desc" id="tdPort" style="margin-top:10px"></div>
+    <div class="port-note" style="margin-top:12px"><b>Como funciona:</b> O saldo devedor no mês da portabilidade é refinanciado à nova taxa. O prazo restante é mantido. Não incide ITBI. Custo principal: avaliação do imóvel (~R$3k).</div>
+  </div>
+</div>
+
+<button class="btn" id="btnSim" style="margin-bottom:20px">▶ Simular</button>
+
+<!-- RESULTADO -->
+<div id="res" class="hidden">
+  <div class="ibar" id="ibar"></div>
+  <div id="pbanner"></div>
+  <div class="sec">Comparativo dos 4 Cenários</div>
+  <div class="cards" id="cards"></div>
+  <div class="sec">Evolução da Parcela</div>
+  <div class="ch-box">
+    <div class="ch-lbl">Parcela R$ ao longo dos meses (linha fina = sem portabilidade)</div>
+    <svg class="ch" id="svgCh" height="220"></svg>
+    <div class="leg" id="leg"></div>
+  </div>
+  <div class="sec">Tabela Mensal</div>
+  <div class="tabs" id="tabs"></div>
+  <div id="tbls"></div>
+</div>
+</div>
+
+<script>
+// ─── CURRENCY INPUT SYSTEM ────────────────────────────────────────
+// Each cur-wrap has: hidden input (fXxx), display span (sXxx), wrapper div (wXxx)
+// prefix: 'R$' for money fields, '' for plain numbers
+var CUR_FIELDS = [
+  {wrap:'wValor',   span:'sValor',   hidden:'fValor',    prefix:'R$', decimals:false},
+  {wrap:'wEntrada', span:'sEntrada', hidden:'fEntrada',  prefix:'R$', decimals:false},
+  {wrap:'wPrazo',   span:'sPrazo',   hidden:'fPrazo',    prefix:'',   decimals:false},
+  {wrap:'wOrc',     span:'sOrc',     hidden:'fOrc',      prefix:'R$', decimals:false},
+  {wrap:'wExtra',   span:'sExtra',   hidden:'fExtra',    prefix:'',   decimals:false},
+  {wrap:'wPortMes', span:'sPortMes', hidden:'fPortMes',  prefix:'',   decimals:false},
+  {wrap:'wPortCusto',span:'sPortCusto',hidden:'fPortCusto',prefix:'R$',decimals:false},
+];
+
+var activeCur = null;  // current field being edited
+var curRaw = '';       // raw digit string being typed
+
+function ptBR(n) {
+  return Math.round(n).toLocaleString('pt-BR');
+}
+
+function focusCur(wrapId) {
+  // find field config
+  var cfg = null;
+  for (var k = 0; k < CUR_FIELDS.length; k++) {
+    if (CUR_FIELDS[k].wrap === wrapId) { cfg = CUR_FIELDS[k]; break; }
+  }
+  if (!cfg) return;
+
+  // if same field, do nothing
+  if (activeCur && activeCur.wrap === wrapId) return;
+
+  // blur any active
+  blurCur();
+
+  activeCur = cfg;
+  curRaw = document.getElementById(cfg.hidden).value.replace(/\D/g,'');
+  document.getElementById(cfg.wrap).classList.add('editing');
+  updateCurDisplay();
+  // listen keyboard globally
+  document.addEventListener('keydown', onCurKey);
+}
+
+function blurCur() {
+  if (!activeCur) return;
+  document.getElementById(activeCur.wrap).classList.remove('editing');
+  document.removeEventListener('keydown', onCurKey);
+  activeCur = null;
+  curRaw = '';
+  // update entrada info if relevant
+  updateEntradaInfo();
+}
+
+function onCurKey(e) {
+  if (!activeCur) return;
+  if (e.key >= '0' && e.key <= '9') {
+    curRaw += e.key;
+    e.preventDefault();
+  } else if (e.key === 'Backspace') {
+    curRaw = curRaw.slice(0, -1);
+    e.preventDefault();
+  } else if (e.key === 'Enter' || e.key === 'Tab') {
+    blurCur();
+    return;
+  } else if (e.key === 'Escape') {
+    blurCur();
+    return;
+  } else {
+    e.preventDefault();
+    return;
+  }
+  updateCurDisplay();
+}
+
+function updateCurDisplay() {
+  if (!activeCur) return;
+  var raw = curRaw || '0';
+  var num = parseInt(raw, 10) || 0;
+  document.getElementById(activeCur.hidden).value = num;
+  document.getElementById(activeCur.span).textContent = ptBR(num);
+  if (activeCur.wrap === 'wValor' || activeCur.wrap === 'wEntrada') updateEntradaInfo();
+}
+
+function updateEntradaInfo() {
+  var valor   = parseInt(document.getElementById('fValor').value, 10)   || 0;
+  var entrada = parseInt(document.getElementById('fEntrada').value, 10) || 0;
+  var pv      = valor - entrada;
+  var pct     = valor > 0 ? (entrada / valor * 100).toFixed(1) : 0;
+  var el      = document.getElementById('entradaInfo');
+  if (el && valor > 0) {
+    var cor = parseFloat(pct) >= 20 ? '#4ade80' : '#f87171';
+    el.innerHTML = 'Entrada: <b style="color:'+cor+'">' + pct + '%</b> do imóvel — '
+      + 'Valor financiado: <b style="color:#e2e8f0">R$ ' + ptBR(pv) + '</b>'
+      + (parseFloat(pct) < 20 ? ' &nbsp;<span style="color:#f87171;font-size:10px">⚠️ mín. recomendado: 20%</span>' : '');
+  }
+}
+
+// Dismiss on outside click
+document.addEventListener('click', function(e) {
+  if (!activeCur) return;
+  var wrap = document.getElementById(activeCur.wrap);
+  if (wrap && !wrap.contains(e.target)) blurCur();
+});
+
+// ─── TAXA DATA ────────────────────────────────────────────────────
+var TX = [
+  {v:10.50,tag:'ti', lbl:'Impossível',    ico:'🚫',desc:'Não existe no SFH com Selic a 14,75%. Apenas MCMV faixas 1-2 com subsídio total.'},
+  {v:10.75,tag:'ti', lbl:'Impossível',    ico:'🚫',desc:'Fora da realidade — banco operaria no prejuízo. Inexistente no mercado convencional.'},
+  {v:11.00,tag:'td_',lbl:'Muito difícil', ico:'⚠️',desc:'Apenas servidor público na CEF, score 900+ e FGTS integral. Menos de 5% dos contratos.'},
+  {v:11.25,tag:'td_',lbl:'Muito difícil', ico:'⚠️',desc:'Exige histórico exemplar na CEF e relacionamento de longa data. Difícil sem negociação.'},
+  {v:11.50,tag:'td_',lbl:'Difícil',       ico:'🟡',desc:'Limite inferior da CEF para bons perfis. Score 800+, conta-salário e FGTS. Alcançável com esforço.'},
+  {v:11.75,tag:'td_',lbl:'Difícil',       ico:'🟡',desc:'CEF para perfil intermediário-bom. Negociação ativa e bom score. Menos comum nos privados.'},
+  {v:12.00,tag:'tp_',lbl:'Possível',      ico:'🟢',desc:'Teto legal do SFH. CEF e Bradesco para perfis medianos. Meta razoável para a maioria.'},
+  {v:12.25,tag:'tp_',lbl:'Possível',      ico:'🟢',desc:'Comum no Itaú e Santander para SFH. Negociável sem grandes exigências de relacionamento.'},
+  {v:12.50,tag:'tr_',lbl:'Realista',      ico:'✅',desc:'Faixa mais ofertada pelos bancos privados para perfil padrão em 2026. Boa para negociar.'},
+  {v:12.75,tag:'tr_',lbl:'Realista',      ico:'✅',desc:'Muito comum no balcão. Apenas renda comprovada e score positivo. Esperada sem negociação.'},
+  {v:13.00,tag:'tc_',lbl:'Comum',         ico:'📊',desc:'Padrão de bancos menores para novos clientes sem relacionamento prévio.'},
+  {v:13.25,tag:'tc_',lbl:'Comum',         ico:'📊',desc:'Típica para score 600-700 ou renda variável. Fintechs e bancos digitais.'},
+  {v:13.50,tag:'te_',lbl:'Esperada',      ico:'📉',desc:'Frequente sem relacionamento sólido ou histórico irregular. Evitar se possível.'},
+  {v:13.75,tag:'te_',lbl:'Esperada',      ico:'📉',desc:'Perfis fora do SFH ou com restrições. Portabilidade futura pode ajudar.'},
+  {v:14.00,tag:'te_',lbl:'Esperada',      ico:'📉',desc:'Crédito livre fora do SFH. Perfil de risco elevado. Próximo da Selic.'},
+];
+
+// -1 = custom
+var selOrig = 8;   // 12.50%
+var selPort = 4;   // 11.50%
+
+function getTaxaVal(sel, customInputId) {
+  if (sel === -1) {
+    var v = parseFloat(document.getElementById(customInputId).value);
+    return isNaN(v) ? 12.50 : v;
+  }
+  return TX[sel].v;
+}
+
+// ─── RENDER TAXA GRID ─────────────────────────────────────────────
+function renderTaxaGrid(gridId, descId, customWrapId, customInputId, selIdx) {
+  var grid = document.getElementById(gridId);
+  var html = '';
+  for (var i = 0; i < TX.length; i++) {
+    var t = TX[i];
+    html += '<div class="tp' + (i === selIdx ? ' sel' : '') + '" '
+          + 'onclick="selecionarTaxa(\'' + gridId + '\',\'' + descId + '\',\''
+          + customWrapId + '\',' + i + ')">'
+          + '<span class="tp-num">' + t.v.toFixed(2) + '%</span>'
+          + '<span class="tp-tag ' + t.tag + '">' + t.lbl + '</span>'
+          + '</div>';
+  }
+  // Custom pill
+  html += '<div class="tp custom-pill' + (selIdx === -1 ? ' sel' : '') + '" '
+        + 'onclick="selecionarTaxa(\'' + gridId + '\',\'' + descId + '\',\''
+        + customWrapId + '\',-1)">'
+        + '<span class="tp-num">✏️ outra</span>'
+        + '<span class="tp-tag" style="background:rgba(148,163,184,.15);color:#94a3b8">personalizada</span>'
+        + '</div>';
+  grid.innerHTML = html;
+  atualizarDesc(descId, customWrapId, customInputId, selIdx);
+}
+
+function selecionarTaxa(gridId, descId, customWrapId, idx) {
+  if (gridId === 'tgOrig') selOrig = idx;
+  if (gridId === 'tgPort') selPort = idx;
+
+  var grid = document.getElementById(gridId);
+  var pills = grid.children;
+  for (var i = 0; i < pills.length; i++) {
+    var isThis = (i === TX.length) ? (idx === -1) : (i === idx);
+    pills[i].className = 'tp' + (i === TX.length ? ' custom-pill' : '') + (isThis ? ' sel' : '');
+  }
+
+  var ciId = customWrapId === 'ciOrig' ? 'fOrigCustom' : 'fPortCustom';
+  var ciWrap = document.getElementById(customWrapId);
+  if (idx === -1) {
+    ciWrap.classList.add('show');
+    document.getElementById(ciId).focus();
+  } else {
+    ciWrap.classList.remove('show');
+  }
+  atualizarDesc(descId, customWrapId, ciId, idx);
+}
+
+function atualizarDesc(descId, customWrapId, customInputId, idx) {
+  var el = document.getElementById(descId);
+  if (idx === -1) {
+    var v = parseFloat(document.getElementById(customInputId).value);
+    el.innerHTML = '✏️ <b>Taxa personalizada' + (isNaN(v) ? '' : ': ' + v.toFixed(2) + '% a.a.') + '</b> — Insira o valor no campo acima. Esta taxa não está nos intervalos predefinidos.';
+  } else {
+    var t = TX[idx];
+    el.innerHTML = '<b>' + t.ico + ' ' + t.v.toFixed(2) + '% a.a. — ' + t.lbl + ':</b> ' + t.desc;
+  }
+}
+
+// update desc when custom value changes
+document.getElementById('fOrigCustom').oninput = function() {
+  atualizarDesc('tdOrig','ciOrig','fOrigCustom', selOrig);
+};
+document.getElementById('fPortCustom').oninput = function() {
+  atualizarDesc('tdPort','ciPort','fPortCustom', selPort);
+};
+
+// ─── TOGGLE PORT ──────────────────────────────────────────────────
+document.getElementById('chkPort').onchange = function() {
+  document.getElementById('portArea').style.display = this.checked ? 'block' : 'none';
+};
+
+// ─── MATH ─────────────────────────────────────────────────────────
+function iMes(taxa) { return Math.pow(1 + taxa / 100, 1/12) - 1; }
+
+function calcPriceParc(saldo, i, n) {
+  if (n <= 0 || saldo <= 0.01) return 0;
+  return saldo * (i * Math.pow(1+i,n)) / (Math.pow(1+i,n) - 1);
+}
+
+// ─── SIMULAÇÃO ────────────────────────────────────────────────────
+function sim(tipo, pv, prazo, taxaO, orc, nExtra, portMes, taxaP, portCont) {
+  var i       = iMes(taxaO);
+  var iAtual  = i;
+  var saldo   = pv;
+  var prest   = prazo;
+  var amSAC   = pv / prazo;
+  var parc    = calcPriceParc(pv, i, prazo);
+  var rows    = [];
+
+  for (var m = 1; m <= prazo; m++) {
+    if (saldo <= 0.01) break;
+    if (portMes > 0 && m === portMes) {
+      iAtual = iMes(taxaP);
+      if (tipo === 'sac1' || tipo === 'sac2') { amSAC = saldo / prest; }
+      else { parc = calcPriceParc(saldo, iAtual, prest); }
+    }
+    var juros, amort, parcela;
+    if (tipo === 'sac1' || tipo === 'sac2') {
+      juros = saldo * iAtual; amort = amSAC; parcela = amort + juros;
+    } else {
+      juros = saldo * iAtual; amort = Math.min(parc - juros, saldo); parcela = parc;
+    }
+    var emNormal = (m <= nExtra);
+    var emPos    = portCont && portMes > 0 && m > portMes && m <= (portMes + nExtra);
+    var extra    = (emNormal || emPos) ? Math.max(0, orc - parcela) : 0;
+    var aTotal   = Math.min(amort + extra, saldo);
+    rows.push({m:m, parc:parcela, juros:juros, amort:amort, extra:extra, saldo:saldo, iAtual:iAtual, ported:(portMes>0&&m===portMes)});
+    saldo -= aTotal; prest--;
+    if (extra > 0.01 && saldo > 0.01 && prest > 0) {
+      if (tipo === 'sac2')   amSAC = saldo / prest;
+      if (tipo === 'price2') parc  = calcPriceParc(saldo, iAtual, prest);
+    }
+  }
+  return rows;
+}
+
+// ─── HELPERS ──────────────────────────────────────────────────────
+function R(v) {
+  if (isNaN(v)||v===null) return 'R$ 0,00';
+  return 'R$\u00a0'+v.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+}
+function M(m) { return m+'m ('+(m/12).toFixed(1)+'a)'; }
+function jTotal(rows) { var s=0; for(var k=0;k<rows.length;k++) s+=rows[k].juros; return s; }
+function pApos(rows,n) { return rows[n]?rows[n].parc:rows[rows.length-1].parc; }
+
+// ─── CALCULAR ─────────────────────────────────────────────────────
+document.getElementById('btnSim').onclick = function() {
+  blurCur(); // commit any active input
+
+  var valor    = parseInt(document.getElementById('fValor').value,10)    || 580000;
+  var entrada  = parseInt(document.getElementById('fEntrada').value,10)  || 116000;
+  var prazo    = parseInt(document.getElementById('fPrazo').value,10)    || 360;
+  var orc      = parseInt(document.getElementById('fOrc').value,10)      || 7000;
+  var nExtra   = parseInt(document.getElementById('fExtra').value,10)    || 24;
+  var usePort  = document.getElementById('chkPort').checked;
+  var portMes  = usePort ? (parseInt(document.getElementById('fPortMes').value,10)||12) : 0;
+  var portCusto= usePort ? (parseInt(document.getElementById('fPortCusto').value,10)||0) : 0;
+  var portCont = usePort && document.getElementById('fPortCont').value==='1';
+  var taxaO    = getTaxaVal(selOrig, 'fOrigCustom');
+  var taxaP    = usePort ? getTaxaVal(selPort, 'fPortCustom') : taxaO;
+  var pv       = valor - entrada;
+  if (pv <= 0) { alert('O valor da entrada não pode ser maior ou igual ao valor do imóvel.'); return; }
+  var parc0    = calcPriceParc(pv, iMes(taxaO), prazo);
+
+  var rS1=sim('sac1',  pv,prazo,taxaO,orc,nExtra,portMes,taxaP,portCont);
+  var rS2=sim('sac2',  pv,prazo,taxaO,orc,nExtra,portMes,taxaP,portCont);
+  var rP1=sim('price1',pv,prazo,taxaO,orc,nExtra,portMes,taxaP,portCont);
+  var rP2=sim('price2',pv,prazo,taxaO,orc,nExtra,portMes,taxaP,portCont);
+  var bS1=sim('sac1',  pv,prazo,taxaO,orc,nExtra,0,taxaO,false);
+  var bS2=sim('sac2',  pv,prazo,taxaO,orc,nExtra,0,taxaO,false);
+  var bP1=sim('price1',pv,prazo,taxaO,orc,nExtra,0,taxaO,false);
+  var bP2=sim('price2',pv,prazo,taxaO,orc,nExtra,0,taxaO,false);
+
+  var J  = [jTotal(rS1),jTotal(rS2),jTotal(rP1),jTotal(rP2)];
+  var JB = [jTotal(bS1),jTotal(bS2),jTotal(bP1),jTotal(bP2)];
+  var minJ = Math.min(J[0],J[1],J[2],J[3]);
+  var saldoPort = portMes>0&&rS1[portMes-2]?rS1[portMes-2].saldo:pv;
+  var entPct = valor>0?(entrada/valor*100).toFixed(1):'0';
+
+  document.getElementById('res').classList.remove('hidden');
+
+  // INFO BAR
+  function ii(k,v){return '<div><div class="ii-k">'+k+'</div><div class="ii-v">'+v+'</div></div>';}
+  var ib='';
+  ib+=ii('Imóvel',R(valor));
+  ib+=ii('Entrada',R(entrada)+'<small> ('+entPct+'%)</small>');
+  ib+=ii('Financiado',R(pv));
+  ib+=ii('Taxa original',taxaO.toFixed(2)+'%<small> a.a.</small>');
+  if(usePort) ib+=ii('Taxa portab.',taxaP.toFixed(2)+'%<small> a.a. · mês '+portMes+'</small>');
+  ib+=ii('Orçamento',R(orc)+'<small> por '+nExtra+'m</small>');
+  document.getElementById('ibar').innerHTML=ib;
+
+  // PORT BANNER
+  if (usePort) {
+    var ecos=[JB[0]-J[0]-portCusto,JB[1]-J[1]-portCusto,JB[2]-J[2]-portCusto,JB[3]-J[3]-portCusto];
+    var maxEco=Math.max(ecos[0],ecos[1],ecos[2],ecos[3]);
+    document.getElementById('pbanner').innerHTML=
+      '<div class="pbanner"><h3>🔄 Portabilidade mês '+portMes+' — '+taxaO.toFixed(2)+'% → '+taxaP.toFixed(2)+'% a.a.</h3>'
+      +'<p>Saldo na portabilidade: <b>'+R(saldoPort)+'</b>. Custo: <b>'+R(portCusto)+'</b>. '
+      +(maxEco>0?'Economia líquida máxima: <b>'+R(maxEco)+'</b>.':'⚠️ <b>Atenção:</b> com esta diferença de taxa, a portabilidade pode não compensar.')
+      +'</p></div>';
+  } else { document.getElementById('pbanner').innerHTML=''; }
+
+  // CARDS
+  var cfgs=[
+    {rows:rS1,jb:JB[0],j:J[0],cor:'#4ade80',ccls:'cg',tipo:'SAC — Est. 1',tit:'Parcela natural<br>Extra reduz prazo+parcela'},
+    {rows:rS2,jb:JB[1],j:J[1],cor:'#34d399',ccls:'ct',tipo:'SAC — Est. 2',tit:'Amort. recalculada<br>Queda agressiva na parcela'},
+    {rows:rP1,jb:JB[2],j:J[2],cor:'#60a5fa',ccls:'cb',tipo:'PRICE — Est. 1',tit:'Parcela fixa<br>Extra reduz prazo'},
+    {rows:rP2,jb:JB[3],j:J[3],cor:'#a78bfa',ccls:'cp',tipo:'PRICE — Est. 2',tit:'Parcela recalculada<br>Extra reduz parcela'},
+  ];
+  var cHTML='';
+  for(var ci=0;ci<cfgs.length;ci++){
+    var cfg=cfgs[ci], win=cfg.j===minJ;
+    var pi=cfg.rows[0].parc, pa=pApos(cfg.rows,nExtra);
+    var eco=usePort?cfg.jb-cfg.j-portCusto:null;
+    var sHTML='';
+    function st(k,v,c){sHTML+='<div class="st"><span class="st-k">'+k+'</span><span class="st-v '+c+'">'+v+'</span></div>';}
+    if(ci===2){st('Parcela (sempre fixa)',R(parc0),'cb');st('↓ Queda na parcela','R$ 0,00','cr');}
+    else{st('Parcela inicial',R(pi),'cy');st('Parcela mês '+(nExtra+1),R(pa),cfg.ccls);st('↓ Queda na parcela','− '+R(pi-pa),cfg.ccls);}
+    st('Prazo c/ extra',M(cfg.rows.length),'cg');
+    st('Meses economizados',(prazo-cfg.rows.length)+'m','cg');
+    st('Juros totais',R(cfg.j),win?'cg':'');
+    if(usePort&&eco!==null){
+      sHTML+='<div class="st st-div"><span class="st-k" style="color:rgba(251,146,60,.6);font-size:9px">─ Portabilidade ─</span></div>';
+      st('Juros sem portab.',R(cfg.jb),'cd');st('Juros com portab.',R(cfg.j),'co');
+      st('Economia líquida',R(eco),eco>=0?'cg':'cr');
+    }
+    cHTML+='<div class="card'+(win?' win':'')+'"><div class="c-bar" style="background:'+cfg.cor+'"></div>'
+          +'<div class="c-head"><div class="c-tipo '+cfg.ccls+'">'+cfg.tipo+'</div>'
+          +'<div class="c-tit">'+cfg.tit+'</div>'+(win?'<div class="c-win">🏆 Menor custo total</div>':'')
+          +'</div><div class="c-body">'+sHTML+'</div></div>';
+  }
+  document.getElementById('cards').innerHTML=cHTML;
+
+  // CHART
+  var allR=[rS1,rS2,rP1,rP2,bS1,bS2];
+  var N=9999; for(var ai=0;ai<allR.length;ai++) N=Math.min(N,allR[ai].length);
+  N=Math.min(N,nExtra+8);
+  var series=[{d:rS1,cor:'#4ade80',dash:''},{d:rS2,cor:'#34d399',dash:'5,3'},{d:rP1,cor:'#60a5fa',dash:''},{d:rP2,cor:'#a78bfa',dash:''}];
+  if(usePort){series.push({d:bS1,cor:'#4ade80',dash:'3,3',opa:.3});series.push({d:bS2,cor:'#34d399',dash:'3,3',opa:.3});}
+  drawChart(series,N,nExtra,portMes);
+
+  // TABLES
+  var tDefs=[
+    {id:'tb0',rows:rS1,cls:'dg',hl:'row-g',onCls:'on-g',lbl:'SAC Est.1'},
+    {id:'tb1',rows:rS2,cls:'dt',hl:'row-t',onCls:'on-t',lbl:'SAC Est.2'},
+    {id:'tb2',rows:rP1,cls:'db',hl:'row-b',onCls:'on-b',lbl:'PRICE Est.1'},
+    {id:'tb3',rows:rP2,cls:'dp',hl:'row-p',onCls:'on-p',lbl:'PRICE Est.2'},
+  ];
+  var tabHTML='',tblHTML='';
+  for(var ti=0;ti<tDefs.length;ti++){
+    var td=tDefs[ti];
+    tabHTML+='<button class="tb-btn'+(ti===0?' '+td.onCls:'')+'" onclick="switchTab(\''+td.id+'\',this,\''+td.onCls+'\')">'+td.lbl+'</button>';
+    tblHTML+='<div id="'+td.id+'" class="tbl-box'+(ti>0?' hidden':'')+'"><div class="tbl-scr">'+buildTable(td.rows,td.cls,td.hl,nExtra,portMes,usePort)+'</div></div>';
+  }
+  document.getElementById('tabs').innerHTML=tabHTML;
+  document.getElementById('tbls').innerHTML=tblHTML;
+};
+
+function switchTab(showId,btn,onCls){
+  var ids=['tb0','tb1','tb2','tb3'];
+  for(var i=0;i<ids.length;i++){var el=document.getElementById(ids[i]);if(el)el.classList.toggle('hidden',ids[i]!==showId);}
+  var btns=document.querySelectorAll('.tb-btn');
+  for(var i=0;i<btns.length;i++) btns[i].className='tb-btn';
+  btn.className='tb-btn '+onCls;
+}
+
+function drawChart(series,N,nExtra,portMes){
+  var all=[];
+  for(var si=0;si<series.length;si++){var d=series[si].d;for(var k=0;k<Math.min(N,d.length);k++)all.push(d[k].parc);}
+  var minV=Math.min.apply(null,all)*0.93, maxV=Math.max.apply(null,all)*1.05;
+  var W=900,H=220,pL=78,pR=16,pT=12,pB=40,cW=W-pL-pR,cH=H-pT-pB;
+  function xS(k){return pL+(k/(N-1))*cW;}
+  function yS(v){return pT+(1-(v-minV)/(maxV-minV))*cH;}
+  var svg='';
+  for(var s=0;s<=4;s++){var v=minV+(maxV-minV)*(s/4),y=yS(v).toFixed(1);svg+='<line x1="'+pL+'" y1="'+y+'" x2="'+(W-pR)+'" y2="'+y+'" stroke="#2d3448" stroke-width="1"/><text x="'+(pL-5)+'" y="'+(parseFloat(y)+4)+'" text-anchor="end" fill="#475569" font-size="10">'+(v/1000).toFixed(1)+'k</text>';}
+  for(var k=0;k<N;k++){if(k%3===0||k===N-1)svg+='<text x="'+xS(k).toFixed(1)+'" y="'+(H-8)+'" text-anchor="middle" fill="#475569" font-size="10">M'+(k+1)+'</text>';}
+  if(nExtra>0&&nExtra<N){var xm=xS(nExtra-1).toFixed(1);svg+='<line x1="'+xm+'" y1="'+pT+'" x2="'+xm+'" y2="'+(H-pB)+'" stroke="rgba(245,158,11,.3)" stroke-width="1" stroke-dasharray="4,3"/><text x="'+(parseFloat(xm)+4)+'" y="'+(pT+12)+'" fill="#f59e0b" font-size="9">fim extra</text>';}
+  if(portMes>0&&portMes<N){var xp=xS(portMes-1).toFixed(1);svg+='<line x1="'+xp+'" y1="'+pT+'" x2="'+xp+'" y2="'+(H-pB)+'" stroke="rgba(251,146,60,.5)" stroke-width="1.5" stroke-dasharray="3,3"/><text x="'+(parseFloat(xp)+4)+'" y="'+(pT+24)+'" fill="#fb923c" font-size="9">port.</text>';}
+  for(var si=0;si<series.length;si++){var s=series[si],d=s.d,pts='';for(var k=0;k<Math.min(N,d.length);k++)pts+=xS(k).toFixed(1)+','+yS(d[k].parc).toFixed(1)+' ';svg+='<polyline points="'+pts.trim()+'" fill="none" stroke="'+s.cor+'" stroke-width="'+(s.opa?'1.5':'2.5')+'"'+(s.dash?' stroke-dasharray="'+s.dash+'"':'')+(s.opa?' opacity="'+s.opa+'"':'')+' stroke-linecap="round" stroke-linejoin="round"/>';}
+  for(var si=0;si<series.length;si++){var s=series[si];if(s.opa)continue;for(var k=0;k<Math.min(N,s.d.length);k++)svg+='<circle cx="'+xS(k).toFixed(1)+'" cy="'+yS(s.d[k].parc).toFixed(1)+'" r="2.5" fill="'+s.cor+'" opacity=".85"/>';}
+  document.getElementById('svgCh').setAttribute('viewBox','0 0 '+W+' '+H);
+  document.getElementById('svgCh').innerHTML=svg;
+  var l='<div class="li"><div class="ld" style="background:#4ade80"></div>SAC Est.1</div><div class="li"><div class="ld" style="background:#34d399"></div>SAC Est.2</div><div class="li"><div class="ld" style="background:#60a5fa"></div>PRICE Est.1</div><div class="li"><div class="ld" style="background:#a78bfa"></div>PRICE Est.2</div>';
+  if(series.length>4)l+='<div class="li"><div style="width:16px;height:2px;background:#4ade80;opacity:.4;border-radius:2px;flex-shrink:0"></div>sem portabilidade</div>';
+  document.getElementById('leg').innerHTML=l;
+}
+
+function buildTable(rows,tdCls,hlCls,nExtra,portMes,usePort){
+  var show=Math.min(rows.length,Math.max(nExtra,portMes>0?portMes:0)+10);
+  var h='<table><thead><tr><th style="text-align:left">Mês</th><th>Parcela</th><th>Juros</th><th>Amort.</th><th>Extra</th><th>Saldo Devedor</th>'+(usePort?'<th>Taxa a.m.</th>':'')+'</tr></thead><tbody>';
+  for(var k=0;k<show;k++){
+    var r=rows[k],isPort=r.ported,isEnd=(r.m===nExtra),hasEx=(r.extra>0.01);
+    var rc=isPort?'row-port':(isEnd?'row-end':'');
+    h+='<tr class="'+rc+'"><td>Mês '+r.m+(isPort?'<span class="tg tg-p">portabilidade</span>':'')+(isEnd?'<span class="tg tg-e">fim extra</span>':'')+(hasEx&&!isEnd&&!isPort?'<span class="tg tg-x">+amort</span>':'')+'</td>'
+      +'<td class="'+(isPort?'do':tdCls)+'">'+R(r.parc)+'</td><td>'+R(r.juros)+'</td><td>'+R(r.amort)+'</td>'
+      +'<td class="'+(hasEx?'de':'')+'">'+( hasEx?R(r.extra):'—')+'</td><td>'+R(r.saldo)+'</td>'
+      +(usePort?'<td style="color:#475569;font-size:10px">'+(r.iAtual*1200).toFixed(3)+'%</td>':'')+'</tr>';
+  }
+  return h+'</tbody></table>';
+}
+
+// ─── INIT ─────────────────────────────────────────────────────────
+renderTaxaGrid('tgOrig','tdOrig','ciOrig','fOrigCustom',selOrig);
+renderTaxaGrid('tgPort','tdPort','ciPort','fPortCustom',selPort);
+updateEntradaInfo();
+</script>
+
+    </div><!-- /.page -->
+
+    <!-- ═══ AD: SIDEBAR DIREITA ═════════════════════════════════════
+         Formato recomendado: Wide Skyscraper 160x600
+         Visível apenas em telas ≥ 1380px
+         Troque data-ad-slot="XXXXXXXXXX" pelo seu Slot ID
+    ═══════════════════════════════════════════════════════════════ -->
+    <div class="ad-side right">
+      <div class="ad-side-label">Publicidade</div>
+      <ins class="adsbygoogle"
+           style="display:inline-block;width:160px;height:600px"
+           data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+           data-ad-slot="XXXXXXXXXX"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
+  </div><!-- /.mid-row -->
+
+  <!-- ═══ AD: BANNER RODAPÉ ═══════════════════════════════════════
+       Formato recomendado: Leaderboard 728x90 (desktop) / Banner 320x50 (mobile)
+       Troque data-ad-slot="XXXXXXXXXX" pelo seu Slot ID
+  ═══════════════════════════════════════════════════════════════ -->
+  <div class="ad-bar bottom">
+    <div class="ad-bar-label">Publicidade</div>
+    <ins class="adsbygoogle"
+         style="display:block;width:100%;min-height:50px;"
+         data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+         data-ad-slot="XXXXXXXXXX"
+         data-ad-format="auto"
+         data-full-width-responsive="true"></ins>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  </div>
+
+</div><!-- /.outer -->
+</body>
+</html>
